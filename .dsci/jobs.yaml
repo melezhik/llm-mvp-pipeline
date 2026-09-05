@@ -1,0 +1,25 @@
+# DSCI Infrastructure Pipeline for LLM MVP Setup
+# Infrastructure pipelines run on localhost (VM) not in Docker containers
+
+global:
+  localhost: true
+
+jobs:
+  - 
+    id: infrastructure
+    path: .dsci/infra/
+  - 
+    id: ollama_setup
+    path: .dsci/ollama/
+  - 
+    id: database_setup
+    path: .dsci/database/
+  - 
+    id: webui_setup
+    path: .dsci/webui/
+  - 
+    id: mvp_backend
+    path: .dsci/mvp/
+  - 
+    id: proxy_setup
+    path: .dsci/proxy/
