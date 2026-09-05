@@ -4,6 +4,31 @@
 global:
   localhost: true
 
+# Initial configuration accessible via config() function in job files
+config:
+  database:
+    user: postgres
+    password: postgres123
+    name: mvp_db
+    port: 5432
+  
+  ollama:
+    model: mistral
+    port: 11434
+  
+  services:
+    webui_port: 3000
+    mvp_port: 8000
+    nginx_port: 80
+  
+  docker:
+    network: llm-mvp
+    volumes:
+      - ollama-models
+      - postgres-data
+      - webui-data
+      - nginx-config
+
 jobs:
   - 
     id: infrastructure
