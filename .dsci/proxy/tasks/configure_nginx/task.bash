@@ -139,8 +139,3 @@ http {
 EOF
 
 echo "Nginx configuration created"
-
-update_state({
-  'nginx_configured': 'true',
-  'nginx_port': "$nginx_port"
-})

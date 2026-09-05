@@ -28,9 +28,3 @@ docker run -d \
   ghcr.io/open-webui/open-webui:main
 
 echo "Open WebUI container started on port $webui_port"
-
-update_state({
-  'webui_running': 'true',
-  'webui_port': "$webui_port",
-  'ollama_base_url': "$ollama_base_url"
-})

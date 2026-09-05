@@ -45,9 +45,3 @@ for i in {1..30}; do
   echo "Waiting for MVP backend... ($i/30)"
   sleep 2
 done
-
-update_state({
-  'mvp_running': 'true',
-  'mvp_port': "$mvp_port",
-  'api_url': "http://localhost:$mvp_port"
-})

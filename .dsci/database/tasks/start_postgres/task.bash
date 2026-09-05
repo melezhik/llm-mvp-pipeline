@@ -3,10 +3,14 @@ set -e
 
 echo "Starting PostgreSQL container..."
 
-# Set PostgreSQL password
-DB_PASSWORD="${DB_PASSWORD:-postgres123}"
-DB_USER="${DB_USER:-postgres}"
-DB_NAME="${DB_NAME:-mvp_db}"
+# Get variables passed from job
+db_user="$db_user"
+db_password="$db_password"
+db_name="$db_name"
+DB_PORT="5432"
+
+echo "Database User: $db_user"
+echo "Database Name: $db_name"
 
 # Pull PostgreSQL image
 docker pull postgres:15-alpine
@@ -20,9 +24,9 @@ docker run -d \
   --name postgres \
   --restart always \
   --network llm-mvp \
-  -e POSTGRES_PASSWORD="$DB_PASSWORD" \
-  -e POSTGRES_USER="$DB_USER" \
-  -e POSTGRES_DB="$DB_NAME" \
+  -e POSTGRES_PASSWORD="$db_password" \
+  -e POSTGRES_USER="$db_user" \
+  -e POSTGRES_DB="$db_name" \
   -v postgres-data:/var/lib/postgresql/data \
   -p 5432:5432 \
   postgres:15-alpine
@@ -34,18 +38,10 @@ echo "Waiting for PostgreSQL to be ready..."
 sleep 15
 
 for i in {1..30}; do
-  if docker exec postgres pg_isready -U $DB_USER > /dev/null 2>&1; then
+  if docker exec postgres pg_isready -U $db_user > /dev/null 2>&1; then
     echo "PostgreSQL is ready!"
     break
   fi
   echo "Waiting... ($i/30)"
   sleep 2
 done
-
-update_state({
-  'postgres_running': True,
-  'db_user': "$DB_USER",
-  'db_name': "$DB_NAME",
-  'db_port': 5432,
-  'db_password': "$DB_PASSWORD"
-})

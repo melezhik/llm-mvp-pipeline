@@ -3,16 +3,18 @@ set -e
 
 echo "Initializing database schema..."
 
-# Get database credentials from state
-dict=$(get_state)
+# Get variables passed from job
+db_user="$db_user"
+db_password="$db_password"
+db_name="$db_name"
 
-DB_USER="${DB_USER:-postgres}"
-DB_NAME="${DB_NAME:-mvp_db}"
+echo "Database User: $db_user"
+echo "Database Name: $db_name"
 
 # Create tables for MVP application
 echo "Creating MVP application tables..."
 
-docker exec postgres psql -U $DB_USER -d $DB_NAME << 'EOF'
+docker exec postgres psql -U $db_user -d $db_name << 'EOF'
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
@@ -50,7 +52,3 @@ CREATE INDEX IF NOT EXISTS idx_chat_messages_session ON chat_messages(session_id
 EOF
 
 echo "Database schema initialized successfully"
-
-update_state({
-  'schema_initialized': True
-})

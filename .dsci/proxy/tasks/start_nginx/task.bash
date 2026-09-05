@@ -58,11 +58,3 @@ echo "Verify with:"
 echo "  docker ps"
 echo "  curl http://localhost:$nginx_port/health"
 echo ""
-
-update_state({
-  'nginx_running': 'true',
-  'deployment_complete': 'true',
-  'webui_url': "http://localhost:$webui_port",
-  'api_url': "http://localhost:$mvp_port",
-  'proxy_url': "http://localhost:$nginx_port"
-})

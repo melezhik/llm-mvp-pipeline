@@ -13,9 +13,3 @@ for volume in "${VOLUMES[@]}"; do
 done
 
 echo "Volume setup complete"
-
-# Save state for other jobs
-update_state({
-  'volumes_created': 'true',
-  'volumes': "$volumes"
-})

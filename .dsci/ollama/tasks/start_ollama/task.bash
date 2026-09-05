@@ -41,8 +41,3 @@ for i in {1..30}; do
   echo "Waiting... ($i/30)"
   sleep 5
 done
-
-update_state({
-  'ollama_running': 'true',
-  'ollama_port': "$ollama_port"
-})
