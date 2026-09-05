@@ -3,14 +3,19 @@ set -e
 
 echo "Building MVP backend application..."
 
-# Get database credentials from previous jobs
-dict=$(get_state)
+# Get variables from task
+db_user="$db_user"
+db_password="$db_password"
+db_name="$db_name"
+db_host="$db_host"
+db_port="$db_port"
+ollama_base_url="$ollama_base_url"
+mvp_port="$mvp_port"
 
-DB_USER="${DB_USER:-postgres}"
-DB_PASSWORD="${DB_PASSWORD:-postgres123}"
-DB_NAME="${DB_NAME:-mvp_db}"
-DB_HOST="postgres"
-DB_PORT="5432"
+echo "Configuration:"
+echo "  Database: $db_user@$db_host:$db_port/$db_name"
+echo "  Ollama URL: $ollama_base_url"
+echo "  MVP Port: $mvp_port"
 
 # Create a simple FastAPI application directory
 echo "Creating FastAPI MVP application..."

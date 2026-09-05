@@ -3,15 +3,21 @@ set -e
 
 echo "Configuring Nginx reverse proxy..."
 
+# Get variables from task
+webui_port="$webui_port"
+mvp_port="$mvp_port"
+ollama_port="$ollama_port"
+nginx_port="$nginx_port"
+
+echo "Port Configuration:"
+echo "  WebUI: $webui_port"
+echo "  MVP: $mvp_port"
+echo "  Ollama: $ollama_port"
+echo "  Nginx: $nginx_port"
+
 # Create nginx config directory
 mkdir -p /tmp/nginx
 cd /tmp/nginx
-
-# Get port configuration
-WEBUI_PORT="${WEBUI_PORT:-3000}"
-MVP_PORT="${MVP_PORT:-8000}"
-OLLAMA_PORT="11434"
-NGINX_PORT="80"
 
 # Create nginx configuration file
 cat > nginx.conf << 'EOF'
@@ -135,6 +141,6 @@ EOF
 echo "Nginx configuration created"
 
 update_state({
-  'nginx_configured': True,
-  'nginx_port': 80
+  'nginx_configured': 'true',
+  'nginx_port': "$nginx_port"
 })

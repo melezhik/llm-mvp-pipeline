@@ -3,8 +3,12 @@ set -e
 
 echo "Starting Open WebUI container..."
 
-# Set WebUI port
-WEBUI_PORT="${WEBUI_PORT:-3000}"
+# Get variables from task
+webui_port="${webui_port:-3000}"
+ollama_base_url="${ollama_base_url:-http://ollama:11434}"
+
+echo "WebUI Port: $webui_port"
+echo "Ollama Base URL: $ollama_base_url"
 
 # Pull Open WebUI image
 docker pull ghcr.io/open-webui/open-webui:main
@@ -18,15 +22,15 @@ docker run -d \
   --name open-webui \
   --restart always \
   --network llm-mvp \
-  -e OLLAMA_BASE_URL="http://ollama:11434" \
+  -e OLLAMA_BASE_URL="$ollama_base_url" \
   -v webui-data:/app/backend/data \
-  -p $WEBUI_PORT:8080 \
+  -p $webui_port:8080 \
   ghcr.io/open-webui/open-webui:main
 
-echo "Open WebUI container started on port $WEBUI_PORT"
+echo "Open WebUI container started on port $webui_port"
 
 update_state({
-  'webui_running': True,
-  'webui_port': "$WEBUI_PORT",
-  'ollama_base_url': 'http://ollama:11434'
+  'webui_running': 'true',
+  'webui_port': "$webui_port",
+  'ollama_base_url': "$ollama_base_url"
 })

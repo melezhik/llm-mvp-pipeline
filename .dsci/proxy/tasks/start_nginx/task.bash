@@ -3,7 +3,14 @@ set -e
 
 echo "Starting Nginx reverse proxy..."
 
-NGINX_PORT="${NGINX_PORT:-80}"
+# Get variables from task
+nginx_port="$nginx_port"
+webui_port="$webui_port"
+mvp_port="$mvp_port"
+
+echo "Nginx Port: $nginx_port"
+echo "WebUI Port: $webui_port"
+echo "MVP Port: $mvp_port"
 
 # Pull Nginx image
 docker pull nginx:alpine
@@ -18,10 +25,10 @@ docker run -d \
   --restart always \
   --network llm-mvp \
   -v /tmp/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
-  -p $NGINX_PORT:80 \
+  -p $nginx_port:80 \
   nginx:alpine
 
-echo "Nginx reverse proxy started on port $NGINX_PORT"
+echo "Nginx reverse proxy started on port $nginx_port"
 
 # Wait for Nginx to be ready
 echo "Waiting for Nginx to be ready..."
@@ -42,21 +49,20 @@ echo "LLM MVP Infrastructure Complete!"
 echo "================================"
 echo ""
 echo "Services are now running:"
-echo "  - WebUI: http://localhost:3000 (or http://localhost if port 80)"
-echo "  - MVP API: http://localhost:8000/docs (Swagger UI)"
+echo "  - WebUI: http://localhost:$webui_port"
+echo "  - MVP API: http://localhost:$mvp_port/docs"
 echo "  - Ollama API: http://localhost:11434"
+echo "  - Reverse Proxy: http://localhost:$nginx_port"
 echo ""
 echo "Verify with:"
 echo "  docker ps"
-echo "  curl http://localhost/health"
+echo "  curl http://localhost:$nginx_port/health"
 echo ""
 
 update_state({
-  'nginx_running': True,
-  'deployment_complete': True,
-  'services': {
-    'webui': 'http://localhost:3000',
-    'api': 'http://localhost:8000',
-    'ollama': 'http://localhost:11434'
-  }
+  'nginx_running': 'true',
+  'deployment_complete': 'true',
+  'webui_url': "http://localhost:$webui_port",
+  'api_url': "http://localhost:$mvp_port",
+  'proxy_url': "http://localhost:$nginx_port"
 })
